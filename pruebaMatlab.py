@@ -25,9 +25,9 @@ class PruebaMatlab():
         dfFechas = dfFechas
         dfFechas.columns = ["label_x"]
 
-        dfCases = pd.DataFrame(dictCM["Cases"])
+        dfCases = pd.DataFrame(dictCM["DailyCases"])
         dfCases = dfCases.transpose()
-        dfCases.columns = ["Cases"]
+        dfCases.columns = ["DailyCases"]
 
         dfHospitalized = pd.DataFrame(dictCM["Hospitalized"])
         dfHospitalized = dfHospitalized.transpose()
@@ -37,26 +37,26 @@ class PruebaMatlab():
         dfCritical = dfCritical.transpose()
         dfCritical.columns = ["Critical"]
 
-        dfDeaths = pd.DataFrame(dictCM["Critical"])
+        dfDeaths = pd.DataFrame(dictCM["DailyDeaths"])
         dfDeaths = dfDeaths.transpose()
-        dfDeaths.columns = ["Deaths"]
+        dfDeaths.columns = ["DailyDeaths"]
 
-        dfRecoveries = pd.DataFrame(dictCM["AcumulatedRecoveries"])
+        dfRecoveries = pd.DataFrame(dictCM["DailyRecoveries"])
         dfRecoveries = dfRecoveries.transpose()
-        dfRecoveries.columns = ["Recoveries"]
+        dfRecoveries.columns = ["DailyRecoveries"]
 
         dfFinal = pd.DataFrame(dfFechas.values, columns = ["Date"])
-        dfFinal["Cases"] = dfCases.values
+        dfFinal["DailyCases"] = dfCases.values
         dfFinal["Hospitalized"] = dfHospitalized.values
         dfFinal["Critical"] = dfCritical.values
-        dfFinal["Deaths"] = dfDeaths.values
-        dfFinal["Recoveries"] = dfRecoveries.values
+        dfFinal["DailyDeaths"] = dfDeaths.values
+        dfFinal["DailyRecoveries"] = dfRecoveries.values
 
-        dfFinal.Cases = dfFinal.Cases.astype(int)
+        dfFinal.DailyCases = dfFinal.DailyCases.astype(int)
         dfFinal.Hospitalized = dfFinal.Hospitalized.astype(int)
         dfFinal.Critical = dfFinal.Critical.astype(int)
-        dfFinal.Deaths = dfFinal.Deaths.astype(int)
-        dfFinal.Recoveries = dfFinal.Recoveries.astype(int)
+        dfFinal.DailyDeaths = dfFinal.DailyDeaths.astype(int)
+        dfFinal.DailyRecoveries = dfFinal.DailyRecoveries.astype(int)
         dfFinal["Date"] = pd.to_datetime(dfFinal["Date"], format = "%d-%m-%Y")
 
         #print(dfFinal)
