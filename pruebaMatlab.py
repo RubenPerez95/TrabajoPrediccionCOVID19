@@ -7,61 +7,59 @@ import pandas as pd
 class PruebaMatlab():
 
     def __init__(self):
-        algo = 0
+
+        eng = matlab.engine.start_matlab()
+        [self.output, self.name_ccaa, self.iso_ccaa, self.data_spain] = eng.HistoricDataSpain(nargout=4)
+        eng.quit()
 
     def dataFrame(self):
 
-        #columns = ["AcumulatedCases", "AcumulatedPRC", "AcumulatedTestAc", "Hospitalized", "Critical", "Deaths", "AcumulatedRecoveries", "label_x", "Cases", "DailyCases", "DailyDeaths", "DailyRecoveries"]
-        #columns = ["AcumulatedCases", "AcumulatedPRC"]
-
         #Preparacion del DataFrame
+        listaCCAA = [None] * len(self.output["historic"])
 
-        eng = matlab.engine.start_matlab()
-        [output, name_ccaa, iso_ccaa, data_spain] = eng.HistoricDataSpain(nargout=4)
-        eng.quit()
-        dictCM = output["historic"][6]
+        for i in range(len(self.output["historic"])):
+            dictionary = self.output["historic"][i]
+            comunidad = self.iso_ccaa[i]
 
-        dfFechas = pd.DataFrame(dictCM["label_x"])
-        dfFechas = dfFechas
-        dfFechas.columns = ["label_x"]
+            dfFechas = pd.DataFrame(dictionary["label_x"])
+            dfFechas = dfFechas
+            dfFechas.columns = ["label_x"]
 
-        dfCases = pd.DataFrame(dictCM["DailyCases"])
-        dfCases = dfCases.transpose()
-        dfCases.columns = ["DailyCases"]
+            dfCases = pd.DataFrame(dictionary["DailyCases"])
+            dfCases = dfCases.transpose()
+            dfCases.columns = ["DailyCases"]
 
-        dfHospitalized = pd.DataFrame(dictCM["Hospitalized"])
-        dfHospitalized = dfHospitalized.transpose()
-        dfHospitalized.columns = ["Hospitalized"]
+            dfHospitalized = pd.DataFrame(dictionary["Hospitalized"])
+            dfHospitalized = dfHospitalized.transpose()
+            dfHospitalized.columns = ["Hospitalized"]
 
-        dfCritical = pd.DataFrame(dictCM["Critical"])
-        dfCritical = dfCritical.transpose()
-        dfCritical.columns = ["Critical"]
+            dfCritical = pd.DataFrame(dictionary["Critical"])
+            dfCritical = dfCritical.transpose()
+            dfCritical.columns = ["Critical"]
 
-        dfDeaths = pd.DataFrame(dictCM["DailyDeaths"])
-        dfDeaths = dfDeaths.transpose()
-        dfDeaths.columns = ["DailyDeaths"]
+            dfDeaths = pd.DataFrame(dictionary["DailyDeaths"])
+            dfDeaths = dfDeaths.transpose()
+            dfDeaths.columns = ["DailyDeaths"]
 
-        dfRecoveries = pd.DataFrame(dictCM["DailyRecoveries"])
-        dfRecoveries = dfRecoveries.transpose()
-        dfRecoveries.columns = ["DailyRecoveries"]
+            dfRecoveries = pd.DataFrame(dictionary["DailyRecoveries"])
+            dfRecoveries = dfRecoveries.transpose()
+            dfRecoveries.columns = ["DailyRecoveries"]
 
-        dfFinal = pd.DataFrame(dfFechas.values, columns = ["Date"])
-        dfFinal["DailyCases"] = dfCases.values
-        dfFinal["Hospitalized"] = dfHospitalized.values
-        dfFinal["Critical"] = dfCritical.values
-        dfFinal["DailyDeaths"] = dfDeaths.values
-        dfFinal["DailyRecoveries"] = dfRecoveries.values
+            dfFinal = pd.DataFrame(dfFechas.values, columns = ["Date"])
+            dfFinal["CCAA"] = comunidad
+            dfFinal["DailyCases"] = dfCases.values
+            dfFinal["Hospitalized"] = dfHospitalized.values
+            dfFinal["Critical"] = dfCritical.values
+            dfFinal["DailyDeaths"] = dfDeaths.values
+            dfFinal["DailyRecoveries"] = dfRecoveries.values
 
-        dfFinal.DailyCases = dfFinal.DailyCases.astype(int)
-        dfFinal.Hospitalized = dfFinal.Hospitalized.astype(int)
-        dfFinal.Critical = dfFinal.Critical.astype(int)
-        dfFinal.DailyDeaths = dfFinal.DailyDeaths.astype(int)
-        dfFinal.DailyRecoveries = dfFinal.DailyRecoveries.astype(int)
-        dfFinal["Date"] = pd.to_datetime(dfFinal["Date"], format = "%d-%m-%Y")
+            dfFinal.DailyCases = dfFinal.DailyCases.astype(int)
+            dfFinal.Hospitalized = dfFinal.Hospitalized.astype(int)
+            dfFinal.Critical = dfFinal.Critical.astype(int)
+            dfFinal.DailyDeaths = dfFinal.DailyDeaths.astype(int)
+            dfFinal.DailyRecoveries = dfFinal.DailyRecoveries.astype(int)
+            dfFinal["Date"] = pd.to_datetime(dfFinal["Date"], format = "%d-%m-%Y")
 
-        #print(dfFinal)
-        return dfFinal
+            listaCCAA[i] = dfFinal
+        return listaCCAA
 
-'''pm = PruebaMatlab()
-
-df = pm.dataFrame'''
