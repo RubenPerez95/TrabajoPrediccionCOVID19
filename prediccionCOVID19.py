@@ -38,8 +38,8 @@ start_time = time()
 #Bucle que itera a lo largo de los 16 días en los que se van a predecir las variables
 for dia in range(0, 16):
     #Cada vez que se cambia de conjunto de fechas a predecir, también cambia el conjunto de datos que se usan para entrenar el modelo
-    inicio = 40 + dia
-    fin = 55 + dia
+    inicio = 40
+    fin = 56 + dia
     diaPred = 15 + dia
 
     #Directorio que guarda los CSVs con el conjunto de días para predecir
